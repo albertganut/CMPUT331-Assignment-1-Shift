@@ -42,17 +42,54 @@ from sys import flags
 LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
 def get_map(letters=LETTERS):
-    output = letters
-    return output
+    char_to_index = {} # holds the letter (keys) that are mapped to their index (values)
+    index_to_char = {} # 
 
+    for index in range(len(letters)):
+        letter = letters[index] # gets the letter at whatever index we're on
+
+        char_to_index[letter] = index # adding the letter to the dictionary with its index as the key
+        index_to_char[index] = letter # adding the index to the dictionary with its letter as the key
+
+    return char_to_index, index_to_char
 
 def encrypt(message: str, key: str):
     message = message.upper()
-    raise NotImplementedError()
+    key = key.upper()
 
+    char_to_index, index_to_char = get_map()
+
+    encrypted_message = ""
+    
+    for char in message:
+
+        if char in char_to_index: # if block runs if the current character is in the dictionary
+            index = char_to_index[char]
+            new_index = (index + char_to_index[key]) % len(LETTERS) # adding the index of the character to the index of the key and taking the mod
+            encrypted_message += index_to_char[new_index]
+        else: # the else block runs if it is not in the dictionary, meaning it is not in the alphabet
+            encrypted_message += char
+
+    return encrypted_message
 
 def decrypt(message: str, key: str):
-    raise NotImplementedError()
+    message = message.upper()
+    key = key.upper()
+
+    char_to_index, index_to_char = get_map()
+
+    decrypted_message = ""
+
+    for char in message:
+
+        if char in char_to_index:
+            index = char_to_index[char]
+            new_index = (index - char_to_index[key]) % len(LETTERS) # subtract instead to shift the index back
+            decrypted_message += index_to_char[new_index]
+        else:
+            decrypted_message += char
+
+    return decrypted_message
 
 
 def test():
