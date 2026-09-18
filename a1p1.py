@@ -42,7 +42,8 @@ from sys import flags
 LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
 def get_map(letters=LETTERS):
-    raise NotImplementedError()
+    output = letters
+    return output
 
 
 def encrypt(message: str, key: str):
