@@ -60,14 +60,19 @@ def encrypt(message: str, key: str):
     char_to_index, index_to_char = get_map()
 
     encrypted_message = ""
-    
+    current_key = key
+
     for char in message:
 
-        if char in char_to_index: # if block runs if the current character is in the dictionary
-            index = char_to_index[char]
-            new_index = (index + char_to_index[key]) % len(LETTERS) # adding the index of the character to the index of the key and taking the mod
+        if char in char_to_index: # runs if the current character is a letter
+            current_plaintext_index = char_to_index[char]
+            key_index = char_to_index[current_key] # index of the current key 
+            new_index = (current_plaintext_index + key_index) % len(LETTERS) 
+
             encrypted_message += index_to_char[new_index]
-        else: # the else block runs if it is not in the dictionary, meaning it is not in the alphabet
+            current_key = char  # update the current key to the current plaintext character for the next iteration
+            
+        else: # runs if current is anything other than a letter, like punctuation or whitespace
             encrypted_message += char
 
     return encrypted_message
@@ -79,14 +84,20 @@ def decrypt(message: str, key: str):
     char_to_index, index_to_char = get_map()
 
     decrypted_message = ""
+    current_key = key
 
-    for char in message:
+    for char in message: 
 
-        if char in char_to_index:
-            index = char_to_index[char]
-            new_index = (index - char_to_index[key]) % len(LETTERS) # subtract instead to shift the index back
-            decrypted_message += index_to_char[new_index]
-        else:
+        if char in char_to_index: # runs if the current character is a letter
+            current_ciphertext_index = char_to_index[char] 
+            key_index = char_to_index[current_key] # index of the current key 
+            new_index = (current_ciphertext_index - key_index) % len(LETTERS)
+
+            decrypted_char = index_to_char[new_index] 
+            decrypted_message += decrypted_char
+
+            current_key = decrypted_char  # this time, we use the decrypted character as the new key for the next iteration instead of the current character in the ciphertext
+        else: # runs if current is anything other than a letter, like punctuation or whitespace
             decrypted_message += char
 
     return decrypted_message
